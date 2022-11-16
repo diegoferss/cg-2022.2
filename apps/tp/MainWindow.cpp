@@ -159,6 +159,23 @@ inline void MainWindow::showOptions() {
   ImGui::PopItemWidth();
 }
 
+inline void MainWindow::ExportWavefront() {
+  char* usrprof_buf;
+  _dupenv_s(&usrprof_buf, nullptr, "userprofile");
+  nfdchar_t default_path[256];
+  sprintf_s(default_path, "%s\\Desktop", usrprof_buf);
+  free(usrprof_buf);
+  nfdchar_t* out_path{};
+  NFD_CHECK(NFD_SaveDialog(nullptr, default_path, &out_path));
+  if (out_path) {
+    std::FILE* out_handle{};
+    fopen_s(&out_handle, out_path, "w");
+    free(out_path);
+    WriteMesh(_defaultMeshes["Spiral"], out_handle);
+    if (out_handle) fclose(out_handle);
+  }
+}
+
 inline void MainWindow::mainMenu() {
   if (ImGui::BeginMainMenuBar()) {
     fileMenu();
@@ -191,22 +208,7 @@ inline void MainWindow::mainMenu() {
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Tools")) {
-      if (ImGui::MenuItem("Export Wavefront")) {
-        char* usrprof_buf;
-        _dupenv_s(&usrprof_buf, nullptr, "userprofile");
-        nfdchar_t default_path[256];
-        sprintf_s(default_path, "%s\\Desktop", usrprof_buf);
-        free(usrprof_buf);
-        nfdchar_t* out_path{};
-        NFD_CHECK(NFD_SaveDialog(nullptr, default_path, &out_path));
-        if (out_path) {
-          std::FILE* out_handle{};
-          fopen_s(&out_handle, out_path, "w");
-          free(out_path);
-          WriteMesh(_defaultMeshes["Spiral"], out_handle);
-          if (out_handle) fclose(out_handle);
-        }
-      }
+      if (ImGui::MenuItem("Export Wavefront")) ExportWavefront();
       if (ImGui::BeginMenu("Options")) {
         showOptions();
         ImGui::EndMenu();

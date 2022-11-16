@@ -33,29 +33,26 @@
 #ifndef __MainWindow_h
 #define __MainWindow_h
 
+#include "RayTracer.h"
 #include "graph/SceneWindow.h"
 #include "graphics/Assets.h"
 #include "graphics/GLImage.h"
-#include "RayTracer.h"
 
 using namespace cg;
 using namespace cg::graph;
-
 
 /////////////////////////////////////////////////////////////////////
 //
 // MainWindow: cg demo main window class
 // ==========
-class MainWindow final: public SceneWindow
-{
-public:
-  MainWindow(int width, int height):
-    SceneWindow{"Ds Demo Version 1.1", width, height}
-  {
+class MainWindow final : public SceneWindow {
+ public:
+  MainWindow(int width, int height)
+      : SceneWindow{"Ds Demo Version 1.1", width, height} {
     // do nothing
   }
 
-private:
+ private:
   Reference<RayTracer> _rayTracer;
   Reference<GLImage> _image;
   int _maxRecursionLevel{6};
@@ -63,13 +60,11 @@ private:
 
   static MeshMap _defaultMeshes;
 
-  auto makeDefaultPrimitive(const char* const meshName)
-  {
+  auto makeDefaultPrimitive(const char* const meshName) {
     return makePrimitive(*_defaultMeshes[meshName], meshName);
   }
 
-  auto createDefaultPrimitiveObject(const char* const meshName)
-  {
+  auto createDefaultPrimitiveObject(const char* const meshName) {
     return createPrimitiveObject(*_defaultMeshes[meshName], meshName);
   }
 
@@ -85,11 +80,12 @@ private:
   void fileMenu();
   void createMenu();
   void showOptions();
+  void ExportWavefront();
 
   void readScene(const std::string& filename);
 
   static void buildDefaultMeshes();
 
-}; // MainWindow
+};  // MainWindow
 
-#endif // __MainWindow_h
+#endif  // __MainWindow_h
