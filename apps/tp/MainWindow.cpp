@@ -199,7 +199,7 @@ inline void MainWindow::mainMenu() {
         free(usrprof_buf);
         nfdchar_t* out_path{};
         NFD_CHECK(NFD_SaveDialog(nullptr, default_path, &out_path));
-        if (out_path && *out_path) {
+        if (out_path) {
           std::FILE* out_handle{};
           fopen_s(&out_handle, out_path, "w");
           free(out_path);
