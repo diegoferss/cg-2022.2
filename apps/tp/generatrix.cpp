@@ -77,7 +77,7 @@ cg::Generatrix& cg::Generatrix::Scale(float scale) {
   return *this;
 }
 
-cg::Generatrix& cg::Generatrix::TwistScale(float scale) {
+cg::Generatrix& cg::Generatrix::AbsoluteScale(float scale) {
   for (int i{}; i < num_points_; i++)
     points_[i] = (points_[i] - center_).versor() * scale + center_;
   radius_ = scale;

@@ -5,10 +5,10 @@
 
 namespace cg {
 
-	class Polygon final : public Generatrix {
-	public:
-		Polygon(int = 3);
-	};
+class Polygon final : public Generatrix {
+ public:
+  Polygon(int num_subdiv = 3);
+};
 
 }  // namespace cg
 

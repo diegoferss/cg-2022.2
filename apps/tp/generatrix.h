@@ -8,28 +8,28 @@ namespace cg {
 
 class Generatrix {
  public:
-  Generatrix(int = 3);
+  Generatrix(int num_subdiv = 3);
 
   // Sem cópias implícitas
   Generatrix(const Generatrix&) = delete;
   Generatrix& operator=(const Generatrix&) = delete;
 
   // Só copiar explicitamente, pra minha sanidade
-  virtual Generatrix Copy(const Generatrix&);
+  virtual Generatrix Copy(const Generatrix& src);
 
   // Mover a gnt deixa
-  Generatrix(Generatrix&&) noexcept;
-  virtual Generatrix& operator=(Generatrix&&) noexcept;
+  Generatrix(Generatrix&& src) noexcept;
+  virtual Generatrix& operator=(Generatrix&& src) noexcept;
 
   ~Generatrix();
 
-  Generatrix& Translate(const vec3f&);
-  Generatrix& Rotate(float, const vec3f& = {0, 1, 0});
-  Generatrix& RotateInPlace(float, const vec3f& = {0, 1, 0});
-  Generatrix& Scale(float);
-  Generatrix& TwistScale(float);
+  Generatrix& Translate(const vec3f& xyz);
+  Generatrix& Rotate(float angle, const vec3f& axis = {0, 1, 0});
+  Generatrix& RotateInPlace(float angle, const vec3f& axis = {0, 1, 0});
+  Generatrix& Scale(float factor);
+  Generatrix& AbsoluteScale(float factor);
 
-  virtual void Draw(GLGraphics3*, bool = false) const;
+  virtual void Draw(GLGraphics3* g3, bool draw_center = false) const;
 
   const vec3f& Center() const;
   float Radius() const;
