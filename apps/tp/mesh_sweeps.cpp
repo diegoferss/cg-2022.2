@@ -10,7 +10,7 @@ TriangleMesh* MakeSpiral(Generatrix& generatrix, int num_subdiv,
                          GLGraphics3* to_be_removed, bool draw_front_cap,
                          bool draw_back_cap, bool draw_generatrices) {
   assert(num_subdiv >= 3 && num_subdiv <= 40);
-  // assert(initial_radius >= 2 * generatrix.Radius() && initial_radius <= 100);
+  assert(initial_radius >= 2 * generatrix.Radius() && initial_radius <= 100);
 
   TriangleMesh::Data data;
 
@@ -78,7 +78,7 @@ TriangleMesh* MakeSpiral(Generatrix& generatrix, int num_subdiv,
     xyz.y = height_inc * num_revolutions / num_subdiv;
     generatrix.Translate(xyz);
 
-    // TODO: 4. Ligar i-ésima geratriz à (i + 1)-ésima
+    // 4. Ligando i-ésima geratriz à (i + 1)-ésima
     for (int l{}; i < num_subdiv && l < generatrix.Sides(); l++, k++) {
       if (l == generatrix.Sides() - 1) {
         data.triangles[n_triangles++].setVertices(k, k + generatrix.Sides(),
@@ -95,10 +95,6 @@ TriangleMesh* MakeSpiral(Generatrix& generatrix, int num_subdiv,
     }
   }
   // 5. Gerando a segunda tampa
-  // NUNCA
-  // JAMAIS
-  // TOCAR NESSE CÓDIGO
-  /// VAZA
   if (draw_back_cap) {
     cap_normal =
         (tmp.Center() - tmp[0]).cross(tmp.Center() - tmp[1]).versor().negate();
