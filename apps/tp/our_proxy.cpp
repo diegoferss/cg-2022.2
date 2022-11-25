@@ -1,4 +1,4 @@
-/*#include "geometry/TriangleMesh.h"
+#include "geometry/TriangleMesh.h"
 #include "graph/PrimitiveProxy.h"
 #include "graphics/TriangleMeshMapper.h"
 
@@ -22,4 +22,4 @@ class OurProxy final : public cg::graph::PrimitiveProxy {
       : PrimitiveProxy{*new cg::TriangleMeshMapper{mesh}}, _meshName{meshName} {
     // do nothing
   }
-};*/
+};

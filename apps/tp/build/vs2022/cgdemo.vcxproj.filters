@@ -62,9 +62,6 @@
     <ClCompile Include="..\..\polygon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\our_proxy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\our_GLGraphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -116,6 +113,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\our_GLGraphics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\spiral_proxy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\twist_proxy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

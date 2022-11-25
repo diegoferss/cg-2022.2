@@ -34,6 +34,7 @@
 
 #include <cstdio>
 
+#include "graph/Component.h"
 #include "graphics/Application.h"
 #include "nfd.h"
 #include "obj_writer.h"
@@ -86,13 +87,38 @@ void MainWindow::beginInitialize() {
   fonts->AddFontFromFileTTF(Application::assetFilePath(ffn).c_str(), 16);*/
 }
 
+namespace cg {
+
+class SpiralParameters final : public Component {
+ public:
+  SpiralParameters() : Component{"Parameters", false} { subdiv = 3; }
+
+  void afterAdded() override {}
+
+  void update() override {}
+
+  void beforeRemoved() override {}
+
+  float subdiv;
+};
+
+}  // namespace cg
+
+void MainWindow::inspectSpiral(SceneWindow&, SpiralProxy& proxy) {}
+
+void MainWindow::inspectTwist(SceneWindow&, TwistProxy& proxy) {}
+
 void MainWindow::createObjectMenu() {
   if (ImGui::BeginMenu("3D Object")) {
     if (ImGui::MenuItem("Box")) createDefaultPrimitiveObject("Box");
     if (ImGui::MenuItem("Sphere")) createDefaultPrimitiveObject("Sphere");
     if (ImGui::MenuItem("Cylinder")) createDefaultPrimitiveObject("Cylinder");
     if (ImGui::MenuItem("Cone")) createDefaultPrimitiveObject("Cone");
-    if (ImGui::MenuItem("Spiral")) createDefaultPrimitiveObject("Spiral");
+    if (ImGui::MenuItem("Spiral")) {
+      auto obj = createDefaultPrimitiveObject("Spiral");
+      auto tmp = new SpiralParameters();
+      obj->addComponent(tmp);
+    }
     if (ImGui::MenuItem("Twist")) createDefaultPrimitiveObject("Twist");
     ImGui::EndMenu();
   }

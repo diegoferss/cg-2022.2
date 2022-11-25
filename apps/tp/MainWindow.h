@@ -37,6 +37,8 @@
 #include "graph/SceneWindow.h"
 #include "graphics/Assets.h"
 #include "graphics/GLImage.h"
+#include "spiral_proxy.h"
+#include "twist_proxy.h"
 
 using namespace cg;
 using namespace cg::graph;
@@ -49,7 +51,8 @@ class MainWindow final : public SceneWindow {
  public:
   MainWindow(int width, int height)
       : SceneWindow{"Ds Demo Version 1.1", width, height} {
-    // do nothing
+    registerInspectFunction<SpiralProxy>(inspectSpiral);
+    registerInspectFunction<TwistProxy>(inspectTwist);
   }
 
  private:
@@ -85,6 +88,9 @@ class MainWindow final : public SceneWindow {
   void readScene(const std::string& filename);
 
   static void buildDefaultMeshes();
+
+  static void inspectSpiral(SceneWindow&, SpiralProxy&);
+  static void inspectTwist(SceneWindow&, TwistProxy&);
 
 };  // MainWindow
 

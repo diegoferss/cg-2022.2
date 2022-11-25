@@ -27,7 +27,6 @@
     <ClCompile Include="..\..\reader\ReaderBase.cpp" />
     <ClCompile Include="..\..\reader\SceneReader.cpp" />
     <ClCompile Include="..\..\reader\Scope.cpp" />
-    <ClCompile Include="..\..\our_proxy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\generatrix.h" />
@@ -35,6 +34,7 @@
     <ClInclude Include="..\..\mesh_sweeps.h" />
     <ClInclude Include="..\..\obj_writer.h" />
     <ClInclude Include="..\..\our_GLGraphics.h" />
+    <ClInclude Include="..\..\spiral_proxy.h" />
     <ClInclude Include="..\..\polygon.h" />
     <ClInclude Include="..\..\RayTracer.h" />
     <ClInclude Include="..\..\reader\AbstractParser.h" />
@@ -46,6 +46,7 @@
     <ClInclude Include="..\..\reader\SceneReader.h" />
     <ClInclude Include="..\..\reader\Scope.h" />
     <ClInclude Include="..\..\reader\StringRef.h" />
+    <ClInclude Include="..\..\twist_proxy.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
