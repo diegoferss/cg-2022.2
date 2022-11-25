@@ -47,6 +47,8 @@ using namespace cg::graph;
 // ==========
 class MainWindow final : public SceneWindow {
  public:
+     friend class OurGLGraphics;
+
   MainWindow(int width, int height)
       : SceneWindow{"Ds Demo Version 1.1", width, height} {
     // do nothing
@@ -57,15 +59,26 @@ class MainWindow final : public SceneWindow {
   Reference<GLImage> _image;
   int _maxRecursionLevel{6};
   float _minWeight{RayTracer::minMinWeight};
+  
+  static const float* _num_subdiv{ new float};
+  static const float* _spiral_initial_radius{ 2 * 2 };
+  static const float* _spiral_num_revolutions{ 2 };
+  static const float* _spiral_height_inc{ 2.5f * 2 };
+  static const float* _spiral_radius_inc{ 0.01 };
+  static const bool* _spiral_draw_front_cap{ true };
+  static const bool* _spiral_draw_back_cap{ true };
+  static const bool* _spiral_draw_generatrices{ false };
 
   static MeshMap _defaultMeshes;
 
   auto makeDefaultPrimitive(const char* const meshName) {
-    return makePrimitive(*_defaultMeshes[meshName], meshName);
+    auto object = makePrimitive(*_defaultMeshes[meshName], meshName);
+    return object;
   }
 
   auto createDefaultPrimitiveObject(const char* const meshName) {
-    return createPrimitiveObject(*_defaultMeshes[meshName], meshName);
+    auto object = createPrimitiveObject(*_defaultMeshes[meshName], meshName);
+    return object;
   }
 
   void beginInitialize() override;

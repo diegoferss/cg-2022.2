@@ -28,6 +28,7 @@
     <ClCompile Include="..\..\reader\SceneReader.cpp" />
     <ClCompile Include="..\..\reader\Scope.cpp" />
     <ClCompile Include="..\..\our_proxy.cpp" />
+    <ClCompile Include="..\..\spiral_parameters.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\generatrix.h" />
@@ -46,6 +47,7 @@
     <ClInclude Include="..\..\reader\SceneReader.h" />
     <ClInclude Include="..\..\reader\Scope.h" />
     <ClInclude Include="..\..\reader\StringRef.h" />
+    <ClInclude Include="..\..\spiral_parameters.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

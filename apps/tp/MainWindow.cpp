@@ -247,8 +247,26 @@ void MainWindow::gui() {
 
   // Inspector Window
   ImGui::SetNextWindowPos({rgt, top});
-  ImGui::SetNextWindowSize({iww, awy - top});
+  ImGui::SetNextWindowSize({iww, awh});
   inspectorWindow();
+
+
+  // Nossas coisas
+  ImGui::SetNextWindowPos({ rgt, h / 3 + top});
+  ImGui::SetNextWindowSize({ iww, awh - top });
+  ImGui::Begin("Nossas coisas");
+      ImGui::SliderFloat("Spiral rev.", &_spiral_num_revolutions, 0, 10);
+      ImGui::SliderFloat("Spiral height inc.", &_spiral_height_inc, 0, 10);
+      ImGui::SliderFloat("Spiral adius inc.", &_spiral_radius_inc, 0, 10);
+      ImGui::Checkbox("Front cap", &_spiral_draw_front_cap);
+      ImGui::Checkbox("Front cap", &_spiral_draw_front_cap);
+      ImGui::SameLine();
+      ImGui::Checkbox("Back cap", &_spiral_draw_back_cap);
+      ImGui::Checkbox("Back cap", &_spiral_draw_back_cap);
+      ImGui::Checkbox("Draw generatrices", &_spiral_draw_generatrices);
+      ImGui::Separator();
+  ImGui::End();
+
   // Assets Window
   ImGui::SetNextWindowPos({rgt, awy});
   ImGui::SetNextWindowSize({iww, awh});

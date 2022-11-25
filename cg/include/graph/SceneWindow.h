@@ -127,7 +127,7 @@ private:
   {
     return _inspectFunctions[typeid(component).hash_code()];
   }
-
+  
   void inspectSceneObject(SceneObject&);
   void inspectScene();
   void inspectCurrentNode();
