@@ -58,15 +58,16 @@ cg::Generatrix& cg::Generatrix::Translate(const vec3f& xyz) {
 }
 
 cg::Generatrix& cg::Generatrix::Rotate(float deg, const vec3f& axis) {
-  auto rot_quat = quatf{deg, axis};
+  quatf rot_quat{deg, axis};
   for (int i{}; i < num_points_; i++) points_[i] = rot_quat.rotate(points_[i]);
   center_ = rot_quat.rotate(center_);
   return *this;
 }
 
 cg::Generatrix& cg::Generatrix::RotateInPlace(float deg, const vec3f& axis) {
+  quatf rot_quat{deg, axis};
   for (int i{}; i < num_points_; i++)
-    points_[i] = quatf{deg, axis}.rotate(points_[i] - center_) + center_;
+    points_[i] = rot_quat.rotate(points_[i] - center_) + center_;
   return *this;
 }
 
