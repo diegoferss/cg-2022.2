@@ -53,12 +53,28 @@ class MainWindow final : public SceneWindow {
       : SceneWindow{"Ds Demo Version 1.1", width, height} {
     // do nothing
   }
-
  private:
   Reference<RayTracer> _rayTracer;
   Reference<GLImage> _image;
   int _maxRecursionLevel{6};
   float _minWeight{RayTracer::minMinWeight};
+
+  class SpiralProxy final : public cg::graph::PrimitiveProxy {
+  public:
+      static auto New(const cg::TriangleMesh& mesh, const std::string& meshName) {
+          return new SpiralProxy{ mesh, meshName };
+      }
+
+      const char* const meshName() const { return _meshName.c_str(); }
+
+  private:
+      std::string _meshName;
+
+      SpiralProxy(const cg::TriangleMesh& mesh, const std::string& meshName)
+          : PrimitiveProxy{ *new cg::TriangleMeshMapper{mesh} }, _meshName{ meshName } {
+          // do nothing
+      }
+  };
 
   static MeshMap _defaultMeshes;
 
@@ -69,6 +85,14 @@ class MainWindow final : public SceneWindow {
 
   auto createDefaultPrimitiveObject(const char* const meshName) {
     auto object = createPrimitiveObject(*_defaultMeshes[meshName], meshName);
+    return object;
+  }
+
+  auto createDefaultSpiral(const char* const meshName) {
+    auto object = SceneObject::New(*_scene);
+
+    object->setName("%s %d", meshName, ++_primitiveId);
+    object->addComponent(SpiralProxy::New(*_defaultMeshes[meshName], meshName));
     return object;
   }
 

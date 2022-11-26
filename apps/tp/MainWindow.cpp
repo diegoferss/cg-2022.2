@@ -39,6 +39,7 @@
 #include "obj_writer.h"
 #include "our_GLGraphics.h"
 #include "reader/SceneReader.h"
+#include "mesh_sweeps.h"
 
 #ifdef _DEBUG
 #define NFD_CHECK(result)                                   \
@@ -92,7 +93,7 @@ void MainWindow::createObjectMenu() {
     if (ImGui::MenuItem("Sphere")) createDefaultPrimitiveObject("Sphere");
     if (ImGui::MenuItem("Cylinder")) createDefaultPrimitiveObject("Cylinder");
     if (ImGui::MenuItem("Cone")) createDefaultPrimitiveObject("Cone");
-    if (ImGui::MenuItem("Spiral")) createDefaultPrimitiveObject("Spiral");
+    if (ImGui::MenuItem("Spiral")) createDefaultSpiral("Spiral");
     if (ImGui::MenuItem("Twist")) createDefaultPrimitiveObject("Twist");
     ImGui::EndMenu();
   }
@@ -107,7 +108,7 @@ Component* MainWindow::addComponentMenu() {
     if (ImGui::MenuItem("Cylinder"))
       component = makeDefaultPrimitive("Cylinder");
     if (ImGui::MenuItem("Cone")) component = makeDefaultPrimitive("Cone");
-    if (ImGui::MenuItem("Spiral")) component = makeDefaultPrimitive("Spiral");
+    if (ImGui::MenuItem("Spiral")) component = SpiralProxy::New(*_defaultMeshes["Spiral"], "Spiral");
     if (ImGui::MenuItem("Plane")) component = makeDefaultPrimitive("Plane");
     ImGui::EndMenu();
   }
@@ -247,7 +248,7 @@ void MainWindow::gui() {
 
   // Inspector Window
   ImGui::SetNextWindowPos({rgt, top});
-  ImGui::SetNextWindowSize({iww, awh});
+  ImGui::SetNextWindowSize({iww, awh * 2 - top});
   inspectorWindow();
 
 
