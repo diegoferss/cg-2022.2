@@ -37,6 +37,8 @@
 #include "graph/SceneWindow.h"
 #include "graphics/Assets.h"
 #include "graphics/GLImage.h"
+#include "mesh_sweeps.h"
+#include "generatrix.h"
 
 using namespace cg;
 using namespace cg::graph;
@@ -45,14 +47,62 @@ using namespace cg::graph;
 //
 // MainWindow: cg demo main window class
 // ==========
+
+class SpiralProxy final : public cg::graph::PrimitiveProxy
+{
+public:
+
+    int _spiral_num_subdiv;
+    float _spiral_initial_radius;
+    float _spiral_num_revolutions;
+    float _spiral_height_inc;
+    float _spiral_radius_inc;
+    float _polygon_radius;
+    bool _spiral_draw_front_cap;
+    bool _spiral_draw_back_cap;
+    bool _spiral_draw_generatrices;
+
+    static auto New(const cg::TriangleMesh& mesh, const std::string& meshName)
+    {
+        return new SpiralProxy{ mesh, meshName };
+    }
+
+    const char* const meshName() const
+    {
+        return _meshName.c_str();
+    }
+
+    void setMesh(const cg::TriangleMesh& mesh, const std::string& meshName)
+    {
+        ((cg::TriangleMeshMapper*)PrimitiveProxy::mapper())->setMesh(mesh);
+        _meshName = meshName;
+    }
+
+private:
+
+    std::string _meshName;
+
+    SpiralProxy(const cg::TriangleMesh& mesh, const std::string& meshName) :
+        PrimitiveProxy{ *new cg::TriangleMeshMapper{mesh} },
+        _meshName{ meshName }
+    {
+        // do nothing
+    }
+
+};
+
 class MainWindow final : public SceneWindow {
  public:
+
+  friend class OurGLGraphics;
   MainWindow(int width, int height)
       : SceneWindow{"Ds Demo Version 1.1", width, height} {
     // do nothing
+      this->registerInspectFunction<SpiralProxy>(inspectSpiral);
   }
 
  private:
+
   Reference<RayTracer> _rayTracer;
   Reference<GLImage> _image;
   int _maxRecursionLevel{6};
@@ -68,6 +118,15 @@ class MainWindow final : public SceneWindow {
     return createPrimitiveObject(*_defaultMeshes[meshName], meshName);
   }
 
+  auto createDefaultSpiral(const char* const meshName)
+  {
+      auto object = SceneObject::New(*_scene);
+
+      object->setName("%s %d", meshName, ++_primitiveId);
+      object->addComponent(SpiralProxy::New(*_defaultMeshes[meshName], meshName));
+      return object;
+  }
+
   void beginInitialize() override;
   void initializeScene() override;
   void renderScene() override;
@@ -75,6 +134,7 @@ class MainWindow final : public SceneWindow {
   void createObjectMenu() override;
   bool onResize(int width, int height) override;
   void gui() override;
+  static void inspectSpiral(SceneWindow&, SpiralProxy&);
 
   void mainMenu();
   void fileMenu();

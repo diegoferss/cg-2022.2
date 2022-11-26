@@ -92,8 +92,8 @@ void MainWindow::createObjectMenu() {
     if (ImGui::MenuItem("Sphere")) createDefaultPrimitiveObject("Sphere");
     if (ImGui::MenuItem("Cylinder")) createDefaultPrimitiveObject("Cylinder");
     if (ImGui::MenuItem("Cone")) createDefaultPrimitiveObject("Cone");
-    if (ImGui::MenuItem("Spiral")) createDefaultPrimitiveObject("Spiral");
-    if (ImGui::MenuItem("Twist")) createDefaultPrimitiveObject("Twist");
+    if (ImGui::MenuItem("Spiral")) createDefaultSpiral("Spiral");
+    //if (ImGui::MenuItem("Twist")) createDefaultPrimitiveObject("Twist");
     ImGui::EndMenu();
   }
 }
@@ -192,6 +192,7 @@ inline void MainWindow::mainMenu() {
         // TODO: change mode only if scene has changed
         if (_viewMode == ViewMode::Editor) _image = nullptr;
       }
+      float a = 100.0;
       ImGui::Separator();
       ImGui::MenuItem("Hierarchy Window", nullptr, &_showHierarchy);
       ImGui::MenuItem("Inspector Window", nullptr, &_showInspector);
@@ -247,13 +248,83 @@ void MainWindow::gui() {
 
   // Inspector Window
   ImGui::SetNextWindowPos({rgt, top});
-  ImGui::SetNextWindowSize({iww, awy - top});
+  ImGui::SetNextWindowSize({iww, awh * 2 - top });
   inspectorWindow();
   // Assets Window
   ImGui::SetNextWindowPos({rgt, awy});
-  ImGui::SetNextWindowSize({iww, awh});
+  ImGui::SetNextWindowSize({iww, awh });
   assetsWindow();
+
 }
+
+void MainWindow::inspectSpiral(SceneWindow& janela, SpiralProxy& spiral)
+{
+    
+    ImGui::inputText("Mesh", spiral.meshName());
+    if (ImGui::BeginDragDropTarget())
+    {
+        if (auto* payload = ImGui::AcceptDragDropPayload("TriangleMesh"))
+        {
+            auto mit = *(MeshMapIterator*)payload->Data;
+            spiral.setMesh(*Assets::loadMesh(mit), mit->first);
+        }
+        ImGui::EndDragDropTarget();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("...###PrimitiveMesh"))
+        ImGui::OpenPopup("PrimitiveMeshPopup");
+    if (ImGui::BeginPopup("PrimitiveMeshPopup"))
+    {
+        if (auto& meshes = Assets::meshes(); !meshes.empty())
+        {
+            for (auto mit = meshes.begin(); mit != meshes.end(); ++mit)
+                if (ImGui::Selectable(mit->first.c_str()))
+                    spiral.setMesh(*Assets::loadMesh(mit), mit->first);
+        }
+        ImGui::EndPopup();
+    }
+    ImGui::Separator();
+
+    auto primitive = spiral.mapper()->primitive();
+    auto material = primitive->material();
+    ImGui::inputText("Material", material->name());
+    if (ImGui::BeginDragDropTarget())
+    {
+        if (auto* payload = ImGui::AcceptDragDropPayload("Material"))
+        {
+            auto mit = *(MaterialMapIterator*)payload->Data;
+
+            assert(mit->second != nullptr);
+            primitive->setMaterial(material = mit->second);
+        }
+        ImGui::EndDragDropTarget();
+    }
+    inspectMaterial(*material);
+    spiral.actor()->visible = spiral.sceneObject()->visible();
+
+    ImGui::inputText("Sliders", spiral.meshName());
+    if (ImGui::BeginDragDropTarget())
+    {
+        if (auto* payload = ImGui::AcceptDragDropPayload("TriangleMesh"))
+        {
+            ImGui::SliderInt("Spiral subdiv.", &spiral._spiral_num_subdiv, 3, 40);
+            ImGui::SliderFloat("Spiral radius", &spiral._spiral_initial_radius, spiral._polygon_radius, 100);
+            ImGui::SliderFloat("Spiral rev.", &spiral._spiral_num_revolutions, 0, 10);
+            ImGui::SliderFloat("Spiral height inc.", &spiral._spiral_height_inc, 0, 10);
+            ImGui::SliderFloat("Spiral adius inc.", &spiral._spiral_radius_inc, 0, 10);
+            ImGui::Checkbox("Front cap", &spiral._spiral_draw_front_cap);
+            ImGui::SameLine();
+            ImGui::Checkbox("Back cap", &spiral._spiral_draw_back_cap);
+            ImGui::Checkbox("Draw generatrices", &spiral._spiral_draw_generatrices);
+            ImGui::Separator();
+        }
+        ImGui::EndDragDropTarget();
+    }
+    /*auto gen = Generatrix();
+    auto tmp = cg::MakeSpiral(gen, spiral._spiral_num_subdiv, spiral._spiral_initial_radius, spiral._spiral_num_revolutions,
+        spiral._spiral_height_inc, spiral._spiral_radius_inc, nullptr, spiral._spiral_draw_front_cap, spiral._spiral_draw_back_cap, false);
+    spiral.setMesh(*tmp, "Spiral");*/
+};
 
 void MainWindow::renderScene() {
   if (_viewMode != ViewMode::Renderer) return;
@@ -272,6 +343,7 @@ void MainWindow::renderScene() {
     _rayTracer->renderImage(*_image);
   }
   _image->draw(0, 0);
+  _defaultMeshes["Spiral"] = OurGLGraphics::spiral();
 }
 
 bool MainWindow::onResize(int width, int height) {
