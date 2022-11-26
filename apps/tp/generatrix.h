@@ -8,7 +8,7 @@ namespace cg {
 
 class Generatrix {
  public:
-  Generatrix(int num_subdiv = 3);
+  Generatrix(int num_subdiv = 6);
 
   // Sem cópias implícitas
   Generatrix(const Generatrix&) = delete;

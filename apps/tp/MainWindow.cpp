@@ -93,7 +93,7 @@ void MainWindow::createObjectMenu() {
     if (ImGui::MenuItem("Cylinder")) createDefaultPrimitiveObject("Cylinder");
     if (ImGui::MenuItem("Cone")) createDefaultPrimitiveObject("Cone");
     if (ImGui::MenuItem("Spiral")) createDefaultSpiral("Spiral");
-    //if (ImGui::MenuItem("Twist")) createDefaultPrimitiveObject("Twist");
+    if (ImGui::MenuItem("Twist")) createDefaultTwist("Twist");
     ImGui::EndMenu();
   }
 }
@@ -270,6 +270,7 @@ void MainWindow::inspectSpiral(SceneWindow& janela, SpiralProxy& spiral)
         }
         ImGui::EndDragDropTarget();
     }
+
     ImGui::SameLine();
     if (ImGui::Button("...###PrimitiveMesh"))
         ImGui::OpenPopup("PrimitiveMeshPopup");
@@ -279,10 +280,13 @@ void MainWindow::inspectSpiral(SceneWindow& janela, SpiralProxy& spiral)
         {
             for (auto mit = meshes.begin(); mit != meshes.end(); ++mit)
                 if (ImGui::Selectable(mit->first.c_str()))
+                {
                     spiral.setMesh(*Assets::loadMesh(mit), mit->first);
+                }
         }
         ImGui::EndPopup();
     }
+
     ImGui::Separator();
 
     auto primitive = spiral.mapper()->primitive();
@@ -301,29 +305,95 @@ void MainWindow::inspectSpiral(SceneWindow& janela, SpiralProxy& spiral)
     }
     inspectMaterial(*material);
     spiral.actor()->visible = spiral.sceneObject()->visible();
+    ImGui::Separator();
 
-    ImGui::inputText("Sliders", spiral.meshName());
+    ImGui::SliderInt("Generatrix subdiv.", &spiral._generatrix_subdiv, 3, 20);
+    ImGui::SliderInt("Spiral subdiv.", &spiral._spiral_num_subdiv, 3, 40);
+    ImGui::SliderFloat("Spiral radius", &spiral._spiral_initial_radius, spiral._polygon_radius, 100);
+    ImGui::SliderFloat("Spiral rev.", &spiral._spiral_num_revolutions, 0, 10);
+    ImGui::SliderFloat("Spiral height inc.", &spiral._spiral_height_inc, 0, 10);
+    ImGui::SliderFloat("Spiral adius inc.", &spiral._spiral_radius_inc, 0, 10);
+    ImGui::Checkbox("Front cap", &spiral._spiral_draw_front_cap);
+    ImGui::SameLine();
+    ImGui::Checkbox("Back cap", &spiral._spiral_draw_back_cap);
+    ImGui::Checkbox("Draw generatrices", &spiral._spiral_draw_generatrices);
+
+    auto gen = Generatrix::Generatrix(spiral._generatrix_subdiv);
+    auto tmp = cg::MakeSpiral(gen, spiral._spiral_num_subdiv, spiral._spiral_initial_radius, spiral._spiral_num_revolutions,
+        spiral._spiral_height_inc, spiral._spiral_radius_inc, nullptr, spiral._spiral_draw_front_cap, spiral._spiral_draw_back_cap, false);
+    spiral.setMesh(*tmp, "Spiral");
+
+};
+
+void MainWindow::inspectTwist(SceneWindow& janela, TwistProxy& twist)
+{
+
+    ImGui::inputText("Mesh", twist.meshName());
     if (ImGui::BeginDragDropTarget())
     {
         if (auto* payload = ImGui::AcceptDragDropPayload("TriangleMesh"))
         {
-            ImGui::SliderInt("Spiral subdiv.", &spiral._spiral_num_subdiv, 3, 40);
-            ImGui::SliderFloat("Spiral radius", &spiral._spiral_initial_radius, spiral._polygon_radius, 100);
-            ImGui::SliderFloat("Spiral rev.", &spiral._spiral_num_revolutions, 0, 10);
-            ImGui::SliderFloat("Spiral height inc.", &spiral._spiral_height_inc, 0, 10);
-            ImGui::SliderFloat("Spiral adius inc.", &spiral._spiral_radius_inc, 0, 10);
-            ImGui::Checkbox("Front cap", &spiral._spiral_draw_front_cap);
-            ImGui::SameLine();
-            ImGui::Checkbox("Back cap", &spiral._spiral_draw_back_cap);
-            ImGui::Checkbox("Draw generatrices", &spiral._spiral_draw_generatrices);
-            ImGui::Separator();
+            auto mit = *(MeshMapIterator*)payload->Data;
+            twist.setMesh(*Assets::loadMesh(mit), mit->first);
         }
         ImGui::EndDragDropTarget();
     }
-    /*auto gen = Generatrix();
-    auto tmp = cg::MakeSpiral(gen, spiral._spiral_num_subdiv, spiral._spiral_initial_radius, spiral._spiral_num_revolutions,
-        spiral._spiral_height_inc, spiral._spiral_radius_inc, nullptr, spiral._spiral_draw_front_cap, spiral._spiral_draw_back_cap, false);
-    spiral.setMesh(*tmp, "Spiral");*/
+
+    ImGui::SameLine();
+    if (ImGui::Button("...###PrimitiveMesh"))
+        ImGui::OpenPopup("PrimitiveMeshPopup");
+    if (ImGui::BeginPopup("PrimitiveMeshPopup"))
+    {
+        if (auto& meshes = Assets::meshes(); !meshes.empty())
+        {
+            for (auto mit = meshes.begin(); mit != meshes.end(); ++mit)
+                if (ImGui::Selectable(mit->first.c_str()))
+                {
+                    twist.setMesh(*Assets::loadMesh(mit), mit->first);
+                }
+        }
+        ImGui::EndPopup();
+    }
+
+    ImGui::Separator();
+
+    auto primitive = twist.mapper()->primitive();
+    auto material = primitive->material();
+    ImGui::inputText("Material", material->name());
+    if (ImGui::BeginDragDropTarget())
+    {
+        if (auto* payload = ImGui::AcceptDragDropPayload("Material"))
+        {
+            auto mit = *(MaterialMapIterator*)payload->Data;
+
+            assert(mit->second != nullptr);
+            primitive->setMaterial(material = mit->second);
+        }
+        ImGui::EndDragDropTarget();
+    }
+    inspectMaterial(*material);
+    twist.actor()->visible = twist.sceneObject()->visible();
+    ImGui::Separator();
+
+    ImGui::SliderInt("Generatrix subdiv.", &twist._generatrix_subdiv, 3, 20);
+    ImGui::SliderInt("Twist subdiv.", &twist._twist_num_subdiv, 1, 50);
+    ImGui::SliderFloat("Twist revolution.", &twist._twist_num_revolutions, -2, 2);
+    ImGui::SliderFloat("Twist length", &twist._twist_length, 1, 50);
+    ImGui::SliderFloat("Twist vertical displacement.", &twist._twist_vertical_pos, -5, 5);
+    ImGui::SliderFloat("Twist horizontal displacement.", &twist._twist_horiz_pos, -5, 5);
+    ImGui::SliderFloat("Twist initial scale.", &twist._twist_initial_scale, 0.1, 5);
+    ImGui::SliderFloat("Twist final scale.", &twist._twist_final_scale, 0.1, 5);
+    ImGui::Checkbox("Front cap", &twist._twist_draw_front_cap);
+    ImGui::SameLine();
+    ImGui::Checkbox("Back cap", &twist._twist_draw_back_cap);
+    ImGui::Checkbox("Draw generatrices", &twist._twist_draw_generatrices);
+
+    auto gen = Generatrix::Generatrix(twist._generatrix_subdiv);
+    auto tmp = cg::MakeTwist(gen, twist._twist_num_subdiv, twist._twist_num_revolutions, twist._twist_length, twist._twist_vertical_pos,
+                            twist._twist_horiz_pos, twist._twist_initial_scale, twist._twist_final_scale, nullptr, 
+                            twist._twist_draw_front_cap, twist._twist_draw_back_cap, false);
+    twist.setMesh(*tmp, "Twist");
+
 };
 
 void MainWindow::renderScene() {

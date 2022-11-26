@@ -52,7 +52,8 @@ class SpiralProxy final : public cg::graph::PrimitiveProxy
 {
 public:
 
-    int _spiral_num_subdiv;
+    int _spiral_num_subdiv = 20;
+    int _generatrix_subdiv = 3;
     float _spiral_initial_radius;
     float _spiral_num_revolutions;
     float _spiral_height_inc;
@@ -91,6 +92,51 @@ private:
 
 };
 
+class TwistProxy final : public cg::graph::PrimitiveProxy
+{
+public:
+
+    int _generatrix_subdiv = 3;
+    int _twist_num_subdiv = 20;
+    float _twist_num_revolutions;
+    float _twist_length;
+    float _twist_vertical_pos;
+    float _twist_horiz_pos;
+    float _twist_initial_scale;
+    float _twist_final_scale;
+    bool _twist_draw_front_cap;
+    bool _twist_draw_back_cap;
+    bool _twist_draw_generatrices;
+
+    static auto New(const cg::TriangleMesh& mesh, const std::string& meshName)
+    {
+        return new TwistProxy{ mesh, meshName };
+    }
+
+    const char* const meshName() const
+    {
+        return _meshName.c_str();
+    }
+
+    void setMesh(const cg::TriangleMesh& mesh, const std::string& meshName)
+    {
+        ((cg::TriangleMeshMapper*)PrimitiveProxy::mapper())->setMesh(mesh);
+        _meshName = meshName;
+    }
+
+private:
+
+    std::string _meshName;
+
+    TwistProxy(const cg::TriangleMesh& mesh, const std::string& meshName) :
+        PrimitiveProxy{ *new cg::TriangleMeshMapper{mesh} },
+        _meshName{ meshName }
+    {
+        // do nothing
+    }
+
+};
+
 class MainWindow final : public SceneWindow {
  public:
 
@@ -99,6 +145,7 @@ class MainWindow final : public SceneWindow {
       : SceneWindow{"Ds Demo Version 1.1", width, height} {
     // do nothing
       this->registerInspectFunction<SpiralProxy>(inspectSpiral);
+      this->registerInspectFunction<TwistProxy>(inspectTwist);
   }
 
  private:
@@ -127,6 +174,15 @@ class MainWindow final : public SceneWindow {
       return object;
   }
 
+  auto createDefaultTwist(const char* const meshName)
+  {
+      auto object = SceneObject::New(*_scene);
+
+      object->setName("%s %d", meshName, ++_primitiveId);
+      object->addComponent(TwistProxy::New(*_defaultMeshes[meshName], meshName));
+      return object;
+  }
+
   void beginInitialize() override;
   void initializeScene() override;
   void renderScene() override;
@@ -135,6 +191,7 @@ class MainWindow final : public SceneWindow {
   bool onResize(int width, int height) override;
   void gui() override;
   static void inspectSpiral(SceneWindow&, SpiralProxy&);
+  static void inspectTwist(SceneWindow&, TwistProxy&);
 
   void mainMenu();
   void fileMenu();
