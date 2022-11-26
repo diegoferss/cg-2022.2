@@ -10,7 +10,7 @@ cg::TriangleMesh* OurGLGraphics::spiral() {
   cg::Generatrix generatrix{20};
 
   if (_spiral == nullptr)
-    _spiral = cg::MakeSpiral(generatrix, MainWindow::_num_subdiv, MainWindow::_spiral_initial_radius, MainWindow::_spiral_num_revolutions, MainWindow::_spiral_height_inc, MainWindow::_spiral_radius_inc, nullptr);
+    //_spiral = cg::MakeSpiral(generatrix, MainWindow::_num_subdiv, MainWindow::_spiral_initial_radius, MainWindow::_spiral_num_revolutions, MainWindow::_spiral_height_inc, MainWindow::_spiral_radius_inc, nullptr);
   return _spiral;
 }
 
