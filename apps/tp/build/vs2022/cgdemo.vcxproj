@@ -30,6 +30,7 @@
     <ClCompile Include="..\..\our_proxy.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\arc.h" />
     <ClInclude Include="..\..\generatrix.h" />
     <ClInclude Include="..\..\MainWindow.h" />
     <ClInclude Include="..\..\mesh_sweeps.h" />

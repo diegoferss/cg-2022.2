@@ -36,6 +36,8 @@
 
 #include "graphics/Application.h"
 #include "nfd.h"
+#include "polygon.h"
+#include "arc.h"
 #include "obj_writer.h"
 #include "our_GLGraphics.h"
 #include "reader/SceneReader.h"
@@ -107,8 +109,8 @@ Component* MainWindow::addComponentMenu() {
     if (ImGui::MenuItem("Cylinder"))
       component = makeDefaultPrimitive("Cylinder");
     if (ImGui::MenuItem("Cone")) component = makeDefaultPrimitive("Cone");
-    if (ImGui::MenuItem("Spiral")) component = makeDefaultPrimitive("Spiral");
-    if (ImGui::MenuItem("Plane")) component = makeDefaultPrimitive("Plane");
+    if (ImGui::MenuItem("Spiral")) component = makeDefaultPrimitive("Spiral"); // TODO
+    if (ImGui::MenuItem("Plane")) component = makeDefaultPrimitive("Plane"); // TODO
     ImGui::EndMenu();
   }
   return component;
@@ -317,6 +319,40 @@ void MainWindow::inspectSpiral(SceneWindow& janela, SpiralProxy& spiral)
     ImGui::SameLine();
     ImGui::Checkbox("Back cap", &spiral._spiral_draw_back_cap);
     ImGui::Checkbox("Draw generatrices", &spiral._spiral_draw_generatrices);
+
+    ImGui::Separator();
+
+
+    ImGui::Text("Generatrix Type");
+    if (ImGui::BeginDragDropTarget())
+    {
+        if (auto* payload = ImGui::AcceptDragDropPayload("TriangleMesh"))
+        {
+            auto mit = *(MeshMapIterator*)payload->Data;
+            spiral.setMesh(*Assets::loadMesh(mit), mit->first);
+        }
+        ImGui::EndDragDropTarget();
+    }
+
+    //Generatrix gen;
+
+    ImGui::SameLine();
+    if (ImGui::Button("...###Generatrices"))
+        ImGui::OpenPopup("GeneratricesPopup");
+    if (ImGui::BeginPopup("GeneratricesPopup"))
+    {
+
+        if (ImGui::Selectable("Polygon")) {
+        //    gen = cg::Polygon(spiral._generatrix_subdiv);
+        }
+        if (ImGui::Selectable("Arc")) {
+        //    gen = cg::Arc(spiral._generatrix_subdiv);
+        }
+        ImGui::EndPopup();
+    }
+
+
+    //gen = cg::Polygon(spiral._generatrix_subdiv);
 
     auto gen = Generatrix::Generatrix(spiral._generatrix_subdiv);
     auto tmp = cg::MakeSpiral(gen, spiral._spiral_num_subdiv, spiral._spiral_initial_radius, spiral._spiral_num_revolutions,

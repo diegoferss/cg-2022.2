@@ -52,16 +52,16 @@ class SpiralProxy final : public cg::graph::PrimitiveProxy
 {
 public:
 
-    int _spiral_num_subdiv = 20;
-    int _generatrix_subdiv = 3;
-    float _spiral_initial_radius;
-    float _spiral_num_revolutions;
-    float _spiral_height_inc;
-    float _spiral_radius_inc;
-    float _polygon_radius;
-    bool _spiral_draw_front_cap;
-    bool _spiral_draw_back_cap;
-    bool _spiral_draw_generatrices;
+    int _spiral_num_subdiv = 40;
+    int _generatrix_subdiv = 20;
+    float _spiral_initial_radius = 2;
+    float _spiral_num_revolutions = 2;
+    float _spiral_height_inc = 3;
+    float _spiral_radius_inc = 0.01;
+    float _polygon_radius = 1;
+    bool _spiral_draw_front_cap = true;
+    bool _spiral_draw_back_cap = true;
+    bool _spiral_draw_generatrices = false;
 
     static auto New(const cg::TriangleMesh& mesh, const std::string& meshName)
     {
@@ -96,17 +96,17 @@ class TwistProxy final : public cg::graph::PrimitiveProxy
 {
 public:
 
-    int _generatrix_subdiv = 3;
-    int _twist_num_subdiv = 20;
-    float _twist_num_revolutions;
-    float _twist_length;
-    float _twist_vertical_pos;
-    float _twist_horiz_pos;
-    float _twist_initial_scale;
-    float _twist_final_scale;
-    bool _twist_draw_front_cap;
-    bool _twist_draw_back_cap;
-    bool _twist_draw_generatrices;
+    int _generatrix_subdiv = 20;
+    int _twist_num_subdiv = 40;
+    float _twist_num_revolutions = 2;
+    float _twist_length = 2;
+    float _twist_vertical_pos = 3;
+    float _twist_horiz_pos = 0.01;
+    float _twist_initial_scale = 2;
+    float _twist_final_scale = 3;
+    bool _twist_draw_front_cap = true;
+    bool _twist_draw_back_cap = true;
+    bool _twist_draw_generatrices = false;
 
     static auto New(const cg::TriangleMesh& mesh, const std::string& meshName)
     {
