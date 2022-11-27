@@ -52,6 +52,9 @@ class SpiralProxy final : public cg::graph::PrimitiveProxy
 {
 public:
 
+    float _arc_angle = 360;
+    bool _is_polygon = false;
+    bool _arc_polyline_situation = false;
     int _spiral_num_subdiv = 40;
     int _generatrix_subdiv = 20;
     float _spiral_initial_radius = 2;
@@ -59,8 +62,8 @@ public:
     float _spiral_height_inc = 3;
     float _spiral_radius_inc = 0.01;
     float _polygon_radius = 1;
-    bool _spiral_draw_front_cap = true;
-    bool _spiral_draw_back_cap = true;
+    bool _spiral_draw_front_cap = false;
+    bool _spiral_draw_back_cap = false;
     bool _spiral_draw_generatrices = false;
 
     static auto New(const cg::TriangleMesh& mesh, const std::string& meshName)
@@ -96,6 +99,9 @@ class TwistProxy final : public cg::graph::PrimitiveProxy
 {
 public:
 
+    float _arc_angle = 360;
+    bool _is_polygon = false;
+    bool _arc_polyline_situation = false;
     int _generatrix_subdiv = 20;
     int _twist_num_subdiv = 40;
     float _twist_num_revolutions = 2;

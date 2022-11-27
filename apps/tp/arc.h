@@ -11,9 +11,9 @@
 
 namespace cg {
 
-    class Arc : public Generatrix {
+    class Arc {
     public:
-        Arc(int nc = 2, float angle = 360, bool close_polyline = false)
+        Arc(int nc = 2, float angle = 360, bool close_polyline = true)
             : radius_{ 1 }, close_polyline_{ close_polyline } {
             assert(nc >= 2 && nc <= 40);
             assert(angle > 0 && angle <= 360);
@@ -66,6 +66,7 @@ namespace cg {
             other.points_ = nullptr;
             other.center_ = {};
             other.radius_ = other.np_ = 0;
+            return *this;
         }
 
         ~Arc() { delete[] points_; }
@@ -101,6 +102,17 @@ namespace cg {
 
             if (close_polyline_ || arcAngle_ == 360)
                 g3->drawLine(points_[np_ - 1], points_[0]);
+        }
+
+        Arc& AbsoluteScale(float factor) {
+            for (int i{}; i < np_; i++)
+                points_[i] = (points_[i] - center_).versor() * factor + center_;
+            radius_ = factor;
+            return *this;
+        }
+
+        bool polylineClosed() {
+            return close_polyline_;
         }
 
         int Sides() const { return np_; }

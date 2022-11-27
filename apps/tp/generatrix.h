@@ -6,28 +6,28 @@
 
 namespace cg {
 
-class Generatrix {
+class Polygon {
  public:
-  Generatrix(int num_subdiv = 6);
+  Polygon(int num_subdiv = 6);
 
   // Sem cópias implícitas
-  Generatrix(const Generatrix&) = delete;
-  Generatrix& operator=(const Generatrix&) = delete;
+  Polygon(const Polygon&) = delete;
+  Polygon& operator=(const Polygon&) = delete;
 
   // Só copiar explicitamente, pra minha sanidade
-  virtual Generatrix Copy(const Generatrix& src);
+  virtual Polygon Copy(const Polygon& src);
 
   // Mover a gnt deixa
-  Generatrix(Generatrix&& src) noexcept;
-  virtual Generatrix& operator=(Generatrix&& src) noexcept;
+  Polygon(Polygon&& src) noexcept;
+  virtual Polygon& operator=(Polygon&& src) noexcept;
 
-  ~Generatrix();
+  ~Polygon();
 
-  Generatrix& Translate(const vec3f& xyz);
-  Generatrix& Rotate(float angle, const vec3f& axis = {0, 1, 0});
-  Generatrix& RotateInPlace(float angle, const vec3f& axis = {0, 1, 0});
-  Generatrix& Scale(float factor);
-  Generatrix& AbsoluteScale(float factor);
+  Polygon& Translate(const vec3f& xyz);
+  Polygon& Rotate(float angle, const vec3f& axis = {0, 1, 0});
+  Polygon& RotateInPlace(float angle, const vec3f& axis = {0, 1, 0});
+  Polygon& Scale(float factor);
+  Polygon& AbsoluteScale(float factor);
 
   virtual void Draw(GLGraphics3* g3, bool draw_center = false) const;
 

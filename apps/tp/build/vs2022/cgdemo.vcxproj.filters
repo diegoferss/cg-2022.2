@@ -50,16 +50,13 @@
     <ClCompile Include="..\..\reader\Scope.cpp">
       <Filter>Source Files\reader</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\generatrix.cpp">
+    <ClCompile Include="..\..\Polygon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\mesh_sweeps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\obj_writer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\polygon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\our_proxy.cpp">
@@ -103,16 +100,13 @@
     <ClInclude Include="..\..\reader\Scope.h">
       <Filter>Header Files\reader</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\generatrix.h">
+    <ClInclude Include="..\..\Polygon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\mesh_sweeps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\obj_writer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\polygon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\our_GLGraphics.h">

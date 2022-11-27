@@ -11,13 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\generatrix.cpp" />
+    <ClCompile Include="..\..\Polygon.cpp" />
     <ClCompile Include="..\..\Main.cpp" />
     <ClCompile Include="..\..\MainWindow.cpp" />
     <ClCompile Include="..\..\mesh_sweeps.cpp" />
     <ClCompile Include="..\..\obj_writer.cpp" />
     <ClCompile Include="..\..\our_GLGraphics.cpp" />
-    <ClCompile Include="..\..\polygon.cpp" />
     <ClCompile Include="..\..\RayTracer.cpp" />
     <ClCompile Include="..\..\reader\AbstractParser.cpp" />
     <ClCompile Include="..\..\reader\Buffer.cpp" />
@@ -31,12 +30,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\arc.h" />
-    <ClInclude Include="..\..\generatrix.h" />
+    <ClInclude Include="..\..\Polygon.h" />
     <ClInclude Include="..\..\MainWindow.h" />
     <ClInclude Include="..\..\mesh_sweeps.h" />
     <ClInclude Include="..\..\obj_writer.h" />
     <ClInclude Include="..\..\our_GLGraphics.h" />
-    <ClInclude Include="..\..\polygon.h" />
     <ClInclude Include="..\..\RayTracer.h" />
     <ClInclude Include="..\..\reader\AbstractParser.h" />
     <ClInclude Include="..\..\reader\Buffer.h" />

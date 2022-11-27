@@ -7,7 +7,7 @@
 cg::TriangleMesh* OurGLGraphics::spiral() {
   static cg::Reference<cg::TriangleMesh> _spiral;
 
-  cg::Generatrix generatrix{20};
+  cg::Polygon generatrix{20};
 
   if (_spiral == nullptr)
     _spiral = cg::MakeSpiral(generatrix, 40, 2, 2, 3, 0.01, nullptr);
@@ -17,7 +17,7 @@ cg::TriangleMesh* OurGLGraphics::spiral() {
 cg::TriangleMesh* OurGLGraphics::twist() {
   static cg::Reference<cg::TriangleMesh> _twist;
 
-  cg::Generatrix generatrix{20};
+  cg::Polygon generatrix{20};
 
   if (_twist == nullptr)
     _twist = cg::MakeTwist(generatrix, 40, 2, 2, 3, 0.01, 2, 3, nullptr);

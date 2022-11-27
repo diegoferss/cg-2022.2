@@ -335,7 +335,7 @@ void MainWindow::inspectSpiral(SceneWindow& janela, SpiralProxy& spiral)
     }
 
     //Generatrix gen;
-
+    
     ImGui::SameLine();
     if (ImGui::Button("...###Generatrices"))
         ImGui::OpenPopup("GeneratricesPopup");
@@ -343,23 +343,30 @@ void MainWindow::inspectSpiral(SceneWindow& janela, SpiralProxy& spiral)
     {
 
         if (ImGui::Selectable("Polygon")) {
+            spiral._is_polygon = true;
         //    gen = cg::Polygon(spiral._generatrix_subdiv);
         }
         if (ImGui::Selectable("Arc")) {
+            spiral._is_polygon = false;
         //    gen = cg::Arc(spiral._generatrix_subdiv);
         }
         ImGui::EndPopup();
     }
 
+    if (!spiral._is_polygon) {
+        ImGui::SliderFloat("Arc angle", &spiral._arc_angle, 1, 360);
+        ImGui::Checkbox("Polyline closed", &spiral._arc_polyline_situation);
+    }
 
     //gen = cg::Polygon(spiral._generatrix_subdiv);
 
-    auto gen = Generatrix::Generatrix(spiral._generatrix_subdiv);
+    auto gen = cg::Arc(spiral._generatrix_subdiv, spiral._arc_angle, spiral._arc_polyline_situation);
     auto tmp = cg::MakeSpiral(gen, spiral._spiral_num_subdiv, spiral._spiral_initial_radius, spiral._spiral_num_revolutions,
         spiral._spiral_height_inc, spiral._spiral_radius_inc, nullptr, spiral._spiral_draw_front_cap, spiral._spiral_draw_back_cap, false);
     spiral.setMesh(*tmp, "Spiral");
 
 };
+
 
 void MainWindow::inspectTwist(SceneWindow& janela, TwistProxy& twist)
 {
@@ -424,7 +431,32 @@ void MainWindow::inspectTwist(SceneWindow& janela, TwistProxy& twist)
     ImGui::Checkbox("Back cap", &twist._twist_draw_back_cap);
     ImGui::Checkbox("Draw generatrices", &twist._twist_draw_generatrices);
 
-    auto gen = Generatrix::Generatrix(twist._generatrix_subdiv);
+
+    //Generatrix gen;
+
+    ImGui::SameLine();
+    if (ImGui::Button("...###Generatrices"))
+        ImGui::OpenPopup("GeneratricesPopup");
+    if (ImGui::BeginPopup("GeneratricesPopup"))
+    {
+
+        if (ImGui::Selectable("Polygon")) {
+            twist._is_polygon = true;
+            //    gen = cg::Polygon(spiral._generatrix_subdiv);
+        }
+        if (ImGui::Selectable("Arc")) {
+            twist._is_polygon = false;
+            //    gen = cg::Arc(spiral._generatrix_subdiv);
+        }
+        ImGui::EndPopup();
+    }
+
+    if (!twist._is_polygon) {
+        ImGui::SliderFloat("Arc angle", &twist._arc_angle, 1, 360);
+        ImGui::Checkbox("Polyline closed", &twist._arc_polyline_situation);
+    }
+
+    auto gen = Arc::Arc(twist._generatrix_subdiv, twist._arc_angle, twist._arc_polyline_situation);
     auto tmp = cg::MakeTwist(gen, twist._twist_num_subdiv, twist._twist_num_revolutions, twist._twist_length, twist._twist_vertical_pos,
                             twist._twist_horiz_pos, twist._twist_initial_scale, twist._twist_final_scale, nullptr, 
                             twist._twist_draw_front_cap, twist._twist_draw_back_cap, false);
