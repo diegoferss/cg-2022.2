@@ -115,5 +115,11 @@
     <ClInclude Include="..\..\arc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TwistProxy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpiralProxy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

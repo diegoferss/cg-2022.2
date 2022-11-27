@@ -11,29 +11,29 @@ namespace cg {
 
 TriangleMesh* MakeSpiral(Polygon& generatrix, int num_subdiv,
                          float initial_radius, float num_revolutions,
-                         float height_inc, float radius_inc, GLGraphics3* g3,
+                         float height_inc, float radius_inc,
                          bool draw_front_cap = true, bool draw_back_cap = true,
                          bool draw_generatrices = false);
 
 TriangleMesh* MakeSpiral(Arc& generatrix, int num_subdiv,
-    float initial_radius, float num_revolutions,
-    float height_inc, float radius_inc, GLGraphics3* g3,
-    bool draw_front_cap = true, bool draw_back_cap = true,
-    bool draw_generatrices = false);
+                        float initial_radius, float num_revolutions,
+                        float height_inc, float radius_inc,
+                        bool draw_front_cap = true, bool draw_back_cap = true,
+                        bool draw_generatrices = false);
 
 TriangleMesh* MakeTwist(Polygon& generatrix, int num_subdiv,
                         float num_revolutions, float length_inc,
                         float vert_displ, float hor_displ, float initial_scale,
-                        float final_scale, GLGraphics3* g3,
+                        float final_scale,
                         bool draw_front_cap = true, bool draw_back_cap = true,
                         bool draw_generatrices = false);
 
 TriangleMesh* MakeTwist(Arc& generatrix, int num_subdiv,
-    float num_revolutions, float length_inc,
-    float vert_displ, float hor_displ, float initial_scale,
-    float final_scale, GLGraphics3* g3,
-    bool draw_front_cap = true, bool draw_back_cap = true,
-    bool draw_generatrices = false);
+                        float num_revolutions, float length_inc,
+                        float vert_displ, float hor_displ, float initial_scale,
+                        float final_scale,
+                        bool draw_front_cap = true, bool draw_back_cap = true,
+                        bool draw_generatrices = false);
 
 }  // namespace cg
 

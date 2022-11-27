@@ -7,7 +7,7 @@ namespace cg {
 TriangleMesh* MakeSpiral(Polygon& generatrix, int num_subdiv,
                          float initial_radius, float num_revolutions,
                          float height_inc, float radius_inc,
-                         GLGraphics3* to_be_removed, bool draw_front_cap,
+                         bool draw_front_cap,
                          bool draw_back_cap, bool draw_generatrices) {
   assert(num_subdiv >= 3 && num_subdiv <= 40);
   // assert(initial_radius >= 2 * generatrix.Radius() && initial_radius <= 100);
@@ -56,7 +56,6 @@ TriangleMesh* MakeSpiral(Polygon& generatrix, int num_subdiv,
   cg::Polygon tmp;
 
   for (int i{}; i <= num_subdiv; i++) {
-    if (draw_generatrices) generatrix.Draw(to_be_removed);
 
     // 1. Adicionando vértices da i-ésima geratriz
     for (int j{}; j < generatrix.Sides(); j++) {
@@ -119,7 +118,7 @@ TriangleMesh* MakeSpiral(Polygon& generatrix, int num_subdiv,
 TriangleMesh* MakeSpiral(Arc& generatrix, int num_subdiv,
     float initial_radius, float num_revolutions,
     float height_inc, float radius_inc,
-    GLGraphics3* to_be_removed, bool draw_front_cap,
+    bool draw_front_cap,
     bool draw_back_cap, bool draw_generatrices) {
     assert(num_subdiv >= 3 && num_subdiv <= 40);
     // assert(initial_radius >= 2 * generatrix.Radius() && initial_radius <= 100);
@@ -168,7 +167,6 @@ TriangleMesh* MakeSpiral(Arc& generatrix, int num_subdiv,
     cg::Arc tmp;
 
     for (int i{}; i <= num_subdiv; i++) {
-        if (draw_generatrices) generatrix.Draw(to_be_removed);
 
         // 1. Adicionando vértices da i-ésima geratriz
         for (int j{}; j < generatrix.Sides(); j++) {
@@ -236,7 +234,7 @@ TriangleMesh* MakeTwist(Polygon& generatrix, int num_subdiv,
                         float num_revolutions, float length_inc,
                         float vertical_translation,
                         float horizontal_translation, float initial_scale,
-                        float final_scale, GLGraphics3* to_be_removed,
+                        float final_scale,
                         bool draw_front_cap, bool draw_back_cap,
                         bool draw_generatrices) {
   assert(num_subdiv >= 1 && num_subdiv <= 50);
@@ -291,7 +289,6 @@ TriangleMesh* MakeTwist(Polygon& generatrix, int num_subdiv,
   cg::Polygon tmp;
 
   for (int i{}; i <= num_subdiv; i++) {
-    if (draw_generatrices) generatrix.Draw(to_be_removed);
 
     // 1. Adicionando vértices da i-ésima geratriz
     for (int j{}; j < generatrix.Sides(); j++) {
@@ -363,7 +360,7 @@ TriangleMesh* MakeTwist(Arc& generatrix, int num_subdiv,
     float num_revolutions, float length_inc,
     float vertical_translation,
     float horizontal_translation, float initial_scale,
-    float final_scale, GLGraphics3* to_be_removed,
+    float final_scale,
     bool draw_front_cap, bool draw_back_cap,
     bool draw_generatrices) {
     assert(num_subdiv >= 1 && num_subdiv <= 50);
@@ -396,7 +393,7 @@ TriangleMesh* MakeTwist(Arc& generatrix, int num_subdiv,
     auto cap_triangles = data.triangles + 2 * generatrix.Sides() * num_subdiv;
 
     // 0.1.1. Geratriz precisa ter no mínimo 3 pts
-    auto cap_normal = (generatrix.Center() - generatrix[0])
+    auto cap_normal = -(generatrix.Center() - generatrix[0])
         .cross(generatrix.Center() - generatrix[1])
         .versor();
 
@@ -418,7 +415,6 @@ TriangleMesh* MakeTwist(Arc& generatrix, int num_subdiv,
     cg::Arc tmp;
 
     for (int i{}; i <= num_subdiv; i++) {
-        if (draw_generatrices) generatrix.Draw(to_be_removed);
 
         // 1. Adicionando vértices da i-ésima geratriz
         for (int j{}; j < generatrix.Sides(); j++) {
@@ -474,7 +470,7 @@ TriangleMesh* MakeTwist(Arc& generatrix, int num_subdiv,
     /// VAZA
     if (draw_back_cap) {
         cap_normal =
-            (tmp.Center() - tmp[0]).cross(tmp.Center() - tmp[1]).versor().negate();
+            -(tmp.Center() - tmp[0]).cross(tmp.Center() - tmp[1]).versor().negate();
         cap_center = int(cap_vertices - data.vertices);
         *cap_vertices++ = tmp.Center();
         *cap_normals++ = cap_normal;

@@ -45,6 +45,8 @@
     <ClInclude Include="..\..\reader\SceneReader.h" />
     <ClInclude Include="..\..\reader\Scope.h" />
     <ClInclude Include="..\..\reader\StringRef.h" />
+    <ClInclude Include="SpiralProxy.h" />
+    <ClInclude Include="TwistProxy.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

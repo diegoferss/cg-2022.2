@@ -161,7 +161,7 @@ inline void MainWindow::showOptions() {
   ImGui::PopItemWidth();
 }
 
-inline void MainWindow::ExportWavefront() {
+inline void MainWindow::ExportWavefront(const cg::TriangleMesh& mesh) {
   char* usrprof_buf;
   _dupenv_s(&usrprof_buf, nullptr, "userprofile");
   nfdchar_t default_path[256];
@@ -173,7 +173,7 @@ inline void MainWindow::ExportWavefront() {
     std::FILE* out_handle{};
     fopen_s(&out_handle, out_path, "w");
     free(out_path);
-    WriteMesh(_defaultMeshes["Spiral"], out_handle);
+    WriteMesh(&mesh, out_handle);
     if (out_handle) fclose(out_handle);
   }
 }
@@ -211,7 +211,8 @@ inline void MainWindow::mainMenu() {
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Tools")) {
-      if (ImGui::MenuItem("Export Wavefront")) ExportWavefront();
+      //talvez tirar? pdf diz que apenas as GUIs dos proxies devem salvar
+      //if (ImGui::MenuItem("Export Wavefront")) ExportWavefront(*_defaultMeshes["Cube"]);
       if (ImGui::BeginMenu("Options")) {
         showOptions();
         ImGui::EndMenu();
@@ -263,7 +264,7 @@ void MainWindow::inspectSpiral(SceneWindow& janela, SpiralProxy& spiral)
 {
     
     ImGui::inputText("Mesh", spiral.meshName());
-    if (ImGui::BeginDragDropTarget())
+    /*if (ImGui::BeginDragDropTarget())
     {
         if (auto* payload = ImGui::AcceptDragDropPayload("TriangleMesh"))
         {
@@ -287,7 +288,7 @@ void MainWindow::inspectSpiral(SceneWindow& janela, SpiralProxy& spiral)
                 }
         }
         ImGui::EndPopup();
-    }
+    }*/
 
     ImGui::Separator();
 
@@ -309,6 +310,7 @@ void MainWindow::inspectSpiral(SceneWindow& janela, SpiralProxy& spiral)
     spiral.actor()->visible = spiral.sceneObject()->visible();
     ImGui::Separator();
 
+    ImGui::Text("Transform");
     ImGui::SliderInt("Generatrix subdiv.", &spiral._generatrix_subdiv, 3, 20);
     ImGui::SliderInt("Spiral subdiv.", &spiral._spiral_num_subdiv, 3, 40);
     ImGui::SliderFloat("Spiral radius", &spiral._spiral_initial_radius, spiral._polygon_radius, 100);
@@ -318,22 +320,9 @@ void MainWindow::inspectSpiral(SceneWindow& janela, SpiralProxy& spiral)
     ImGui::Checkbox("Front cap", &spiral._spiral_draw_front_cap);
     ImGui::SameLine();
     ImGui::Checkbox("Back cap", &spiral._spiral_draw_back_cap);
-    ImGui::Checkbox("Draw generatrices", &spiral._spiral_draw_generatrices);
 
     ImGui::Separator();
-
-
     ImGui::Text("Generatrix Type");
-    if (ImGui::BeginDragDropTarget())
-    {
-        if (auto* payload = ImGui::AcceptDragDropPayload("TriangleMesh"))
-        {
-            auto mit = *(MeshMapIterator*)payload->Data;
-            spiral.setMesh(*Assets::loadMesh(mit), mit->first);
-        }
-        ImGui::EndDragDropTarget();
-    }
-
     //Generatrix gen;
     
     ImGui::SameLine();
@@ -362,8 +351,13 @@ void MainWindow::inspectSpiral(SceneWindow& janela, SpiralProxy& spiral)
 
     auto gen = cg::Arc(spiral._generatrix_subdiv, spiral._arc_angle, spiral._arc_polyline_situation);
     auto tmp = cg::MakeSpiral(gen, spiral._spiral_num_subdiv, spiral._spiral_initial_radius, spiral._spiral_num_revolutions,
-        spiral._spiral_height_inc, spiral._spiral_radius_inc, nullptr, spiral._spiral_draw_front_cap, spiral._spiral_draw_back_cap, false);
+        spiral._spiral_height_inc, spiral._spiral_radius_inc, spiral._spiral_draw_front_cap, spiral._spiral_draw_back_cap, false);
     spiral.setMesh(*tmp, "Spiral");
+
+    ImGui::Separator();
+
+    ImGui::Text("Save");
+    if (ImGui::Button("Save Mesh")) ExportWavefront(*tmp);
 
 };
 
@@ -372,7 +366,7 @@ void MainWindow::inspectTwist(SceneWindow& janela, TwistProxy& twist)
 {
 
     ImGui::inputText("Mesh", twist.meshName());
-    if (ImGui::BeginDragDropTarget())
+    /*if (ImGui::BeginDragDropTarget())
     {
         if (auto* payload = ImGui::AcceptDragDropPayload("TriangleMesh"))
         {
@@ -396,7 +390,7 @@ void MainWindow::inspectTwist(SceneWindow& janela, TwistProxy& twist)
                 }
         }
         ImGui::EndPopup();
-    }
+    }*/
 
     ImGui::Separator();
 
@@ -418,6 +412,7 @@ void MainWindow::inspectTwist(SceneWindow& janela, TwistProxy& twist)
     twist.actor()->visible = twist.sceneObject()->visible();
     ImGui::Separator();
 
+    ImGui::Text("Transform");
     ImGui::SliderInt("Generatrix subdiv.", &twist._generatrix_subdiv, 3, 20);
     ImGui::SliderInt("Twist subdiv.", &twist._twist_num_subdiv, 1, 50);
     ImGui::SliderFloat("Twist revolution.", &twist._twist_num_revolutions, -2, 2);
@@ -429,9 +424,9 @@ void MainWindow::inspectTwist(SceneWindow& janela, TwistProxy& twist)
     ImGui::Checkbox("Front cap", &twist._twist_draw_front_cap);
     ImGui::SameLine();
     ImGui::Checkbox("Back cap", &twist._twist_draw_back_cap);
-    ImGui::Checkbox("Draw generatrices", &twist._twist_draw_generatrices);
 
-
+    ImGui::Separator();
+    ImGui::Text("Generatrix Type");
     //Generatrix gen;
 
     ImGui::SameLine();
@@ -458,10 +453,14 @@ void MainWindow::inspectTwist(SceneWindow& janela, TwistProxy& twist)
 
     auto gen = Arc::Arc(twist._generatrix_subdiv, twist._arc_angle, twist._arc_polyline_situation);
     auto tmp = cg::MakeTwist(gen, twist._twist_num_subdiv, twist._twist_num_revolutions, twist._twist_length, twist._twist_vertical_pos,
-                            twist._twist_horiz_pos, twist._twist_initial_scale, twist._twist_final_scale, nullptr, 
+                            twist._twist_horiz_pos, twist._twist_initial_scale, twist._twist_final_scale, 
                             twist._twist_draw_front_cap, twist._twist_draw_back_cap, false);
     twist.setMesh(*tmp, "Twist");
 
+    ImGui::Separator();
+
+    ImGui::Text("Save");
+    if (ImGui::Button("Save Mesh")) ExportWavefront(*tmp);
 };
 
 void MainWindow::renderScene() {

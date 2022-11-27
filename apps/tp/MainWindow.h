@@ -39,6 +39,8 @@
 #include "graphics/GLImage.h"
 #include "mesh_sweeps.h"
 #include "generatrix.h"
+#include "TwistProxy.h"
+#include "SpiralProxy.h"
 
 using namespace cg;
 using namespace cg::graph;
@@ -47,101 +49,6 @@ using namespace cg::graph;
 //
 // MainWindow: cg demo main window class
 // ==========
-
-class SpiralProxy final : public cg::graph::PrimitiveProxy
-{
-public:
-
-    float _arc_angle = 360;
-    bool _is_polygon = false;
-    bool _arc_polyline_situation = false;
-    int _spiral_num_subdiv = 40;
-    int _generatrix_subdiv = 20;
-    float _spiral_initial_radius = 2;
-    float _spiral_num_revolutions = 2;
-    float _spiral_height_inc = 3;
-    float _spiral_radius_inc = 0.01;
-    float _polygon_radius = 1;
-    bool _spiral_draw_front_cap = false;
-    bool _spiral_draw_back_cap = false;
-    bool _spiral_draw_generatrices = false;
-
-    static auto New(const cg::TriangleMesh& mesh, const std::string& meshName)
-    {
-        return new SpiralProxy{ mesh, meshName };
-    }
-
-    const char* const meshName() const
-    {
-        return _meshName.c_str();
-    }
-
-    void setMesh(const cg::TriangleMesh& mesh, const std::string& meshName)
-    {
-        ((cg::TriangleMeshMapper*)PrimitiveProxy::mapper())->setMesh(mesh);
-        _meshName = meshName;
-    }
-
-private:
-
-    std::string _meshName;
-
-    SpiralProxy(const cg::TriangleMesh& mesh, const std::string& meshName) :
-        PrimitiveProxy{ *new cg::TriangleMeshMapper{mesh} },
-        _meshName{ meshName }
-    {
-        // do nothing
-    }
-
-};
-
-class TwistProxy final : public cg::graph::PrimitiveProxy
-{
-public:
-
-    float _arc_angle = 360;
-    bool _is_polygon = false;
-    bool _arc_polyline_situation = false;
-    int _generatrix_subdiv = 20;
-    int _twist_num_subdiv = 40;
-    float _twist_num_revolutions = 2;
-    float _twist_length = 2;
-    float _twist_vertical_pos = 3;
-    float _twist_horiz_pos = 0.01;
-    float _twist_initial_scale = 2;
-    float _twist_final_scale = 3;
-    bool _twist_draw_front_cap = true;
-    bool _twist_draw_back_cap = true;
-    bool _twist_draw_generatrices = false;
-
-    static auto New(const cg::TriangleMesh& mesh, const std::string& meshName)
-    {
-        return new TwistProxy{ mesh, meshName };
-    }
-
-    const char* const meshName() const
-    {
-        return _meshName.c_str();
-    }
-
-    void setMesh(const cg::TriangleMesh& mesh, const std::string& meshName)
-    {
-        ((cg::TriangleMeshMapper*)PrimitiveProxy::mapper())->setMesh(mesh);
-        _meshName = meshName;
-    }
-
-private:
-
-    std::string _meshName;
-
-    TwistProxy(const cg::TriangleMesh& mesh, const std::string& meshName) :
-        PrimitiveProxy{ *new cg::TriangleMeshMapper{mesh} },
-        _meshName{ meshName }
-    {
-        // do nothing
-    }
-
-};
 
 class MainWindow final : public SceneWindow {
  public:
@@ -203,7 +110,7 @@ class MainWindow final : public SceneWindow {
   void fileMenu();
   void createMenu();
   void showOptions();
-  void ExportWavefront();
+  static void ExportWavefront(const cg::TriangleMesh& mesh);
 
   void readScene(const std::string& filename);
 
