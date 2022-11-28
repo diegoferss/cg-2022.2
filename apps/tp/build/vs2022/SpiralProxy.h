@@ -7,6 +7,7 @@ public:
     bool _arc_polyline_situation = false;
     int _spiral_num_subdiv = 40;
     int _generatrix_subdiv = 20;
+    float _generatrix_radius = 1;
     float _spiral_initial_radius = 2;
     float _spiral_num_revolutions = 2;
     float _spiral_height_inc = 3;

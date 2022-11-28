@@ -10,6 +10,7 @@ public:
     bool _is_polygon = false;
     bool _arc_polyline_situation = false;
     int _generatrix_subdiv = 4;
+    float _generatrix_radius = 1;
     int _twist_num_subdiv = 40;
     float _twist_num_revolutions = 2;
     float _twist_length = 5;
