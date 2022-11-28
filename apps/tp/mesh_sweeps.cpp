@@ -153,7 +153,8 @@ TriangleMesh* MakeSpiral(Arc& generatrix, int num_subdiv,
 
     int cap_center = cap_vertices - data.vertices;
     if (draw_front_cap) {
-        *cap_vertices++ = generatrix.Center();
+        vec3f direction = (generatrix[generatrix.Sides() - 1] - generatrix[0]) * 0.5;
+        *cap_vertices++ = generatrix.angle() < 180 ? generatrix[0] + direction : generatrix.Center();
         *cap_normals++ = cap_normal;
         for (int i{}, tidx{ cap_center + i }; i < generatrix.Sides(); i++, tidx++) {
             *cap_vertices++ = generatrix[i];
@@ -177,7 +178,7 @@ TriangleMesh* MakeSpiral(Arc& generatrix, int num_subdiv,
         }
 
         // 2. Guardando a i-ésima geratriz
-        tmp = generatrix.Copy(generatrix);
+        tmp = Arc::Copy(generatrix);
 
         // 3. Transformando a i-ésima geratriz na (i + 1)-ésima geratriz:
         // 3.1. Rotacionando em torno de y
@@ -190,7 +191,7 @@ TriangleMesh* MakeSpiral(Arc& generatrix, int num_subdiv,
 
         // TODO: 4. Ligar i-ésima geratriz à (i + 1)-ésima
         for (int l{}; i < num_subdiv && l < generatrix.Sides(); l++, k++) {
-            if (generatrix.polylineClosed() && l == generatrix.Sides() - 1) {
+            if (!generatrix.polylineClosed() && l == generatrix.Sides() - 1 && generatrix.angle() < 360) {
                 continue;
             }
             if (l == generatrix.Sides() - 1) {
@@ -213,11 +214,12 @@ TriangleMesh* MakeSpiral(Arc& generatrix, int num_subdiv,
     // JAMAIS
     // TOCAR NESSE CÓDIGO
     /// VAZA
+    cap_center = cap_vertices - data.vertices;
     if (draw_back_cap) {
+        vec3f direction = (tmp[tmp.Sides() - 1] - tmp[0]) * 0.5;
+        *cap_vertices++ = tmp.angle() < 180 ? tmp[0] + direction : tmp.Center();
         cap_normal =
             (tmp.Center() - tmp[0]).cross(tmp.Center() - tmp[1]).versor().negate();
-        cap_center = int(cap_vertices - data.vertices);
-        *cap_vertices++ = tmp.Center();
         *cap_normals++ = cap_normal;
         for (int i{}, tidx{ cap_center + i }; i < tmp.Sides(); i++, tidx++) {
             *cap_vertices++ = tmp[i];
@@ -399,7 +401,8 @@ TriangleMesh* MakeTwist(Arc& generatrix, int num_subdiv,
 
     int cap_center = cap_vertices - data.vertices;
     if (draw_front_cap) {
-        *cap_vertices++ = generatrix.Center();
+        vec3f direction = (generatrix[generatrix.Sides() - 1] - generatrix[0]) * 0.5;
+        *cap_vertices++ = generatrix.angle() < 180 ? generatrix[0] + direction : generatrix.Center();
         *cap_normals++ = cap_normal;
         for (int i{}, tidx{ cap_center + i }; i < generatrix.Sides(); i++, tidx++) {
             *cap_vertices++ = generatrix[i];
@@ -426,7 +429,7 @@ TriangleMesh* MakeTwist(Arc& generatrix, int num_subdiv,
 
         // 1. Adicionando v rtices da i- sima geratriz
         for (int l{}; i < num_subdiv && l < generatrix.Sides(); l++, k++) {
-            if (generatrix.polylineClosed() && l == generatrix.Sides() - 1) {
+            if (!generatrix.polylineClosed() && l == generatrix.Sides() - 1 && generatrix.angle() < 360) {
                 continue;
             }
             if (l == generatrix.Sides() - 1) {
@@ -468,11 +471,12 @@ TriangleMesh* MakeTwist(Arc& generatrix, int num_subdiv,
     // JAMAIS
     // TOCAR NESSE CÓDIGO
     /// VAZA
+    cap_center = cap_vertices - data.vertices;
     if (draw_back_cap) {
+        vec3f direction = (tmp[tmp.Sides() - 1] - tmp[0]) * 0.5;
+        *cap_vertices++ = tmp.angle() < 180 ? tmp[0] + direction : tmp.Center();
         cap_normal =
-            -(tmp.Center() - tmp[0]).cross(tmp.Center() - tmp[1]).versor().negate();
-        cap_center = int(cap_vertices - data.vertices);
-        *cap_vertices++ = tmp.Center();
+            (tmp.Center() - tmp[0]).cross(tmp.Center() - tmp[1]).versor().negate();
         *cap_normals++ = cap_normal;
         for (int i{}, tidx{ cap_center + i }; i < tmp.Sides(); i++, tidx++) {
             *cap_vertices++ = tmp[i];

@@ -39,8 +39,10 @@ namespace cg {
         static Arc Copy(const Arc& src) {
             Arc ret_val{ src.np_ };
             std::copy(src.points_, src.points_ + src.np_, ret_val.points_);
+            ret_val.arcAngle_ = src.arcAngle_;
             ret_val.center_ = src.center_;
             ret_val.radius_ = src.radius_;
+            ret_val.close_polyline_ = src.close_polyline_;
             return ret_val;
         }
 
@@ -62,9 +64,11 @@ namespace cg {
             points_ = std::move(other.points_);
             center_ = std::move(other.center_);
             radius_ = std::move(other.radius_);
+            arcAngle_ = std::move(other.arcAngle_);
             np_ = std::move(other.np_);
             other.points_ = nullptr;
             other.center_ = {};
+            other.arcAngle_ = 0;
             other.radius_ = other.np_ = 0;
             return *this;
         }
@@ -113,6 +117,10 @@ namespace cg {
 
         bool polylineClosed() {
             return close_polyline_;
+        }
+
+        float angle() {
+            return arcAngle_;
         }
 
         int Sides() const { return np_; }
