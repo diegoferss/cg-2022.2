@@ -256,11 +256,13 @@ TriangleMesh* MakeTwist(Polygon& generatrix, int num_subdiv,
   int n_triangles{};
   int k = 0;
 
-  const auto d_theta{360.0f * num_revolutions / float(num_subdiv)};
-  const auto d_length{length_inc / float(num_subdiv)};
+  const auto d_theta{ 360.0f * num_revolutions / float(num_subdiv) };
+  const auto d_length{ length_inc / float(num_subdiv) };
+  const auto d_horizontal{ horizontal_translation / float(num_subdiv) };
+  const auto d_vertical{ vertical_translation / float(num_subdiv) };
 
   // 0. Transladando geratriz p/ posi  o inicial do objeto
-  generatrix.Translate({horizontal_translation, vertical_translation, 0});
+  generatrix.Translate({0, 0, 0});
   generatrix.AbsoluteScale(initial_scale);
 
   // 0.1. Criando tampa inicial
@@ -328,6 +330,10 @@ TriangleMesh* MakeTwist(Polygon& generatrix, int num_subdiv,
     vec3f xyz{0, 0, d_length};
     generatrix.Translate(xyz);
 
+    // 3.2.1 Aplicando o_w_v
+    vec3f xyz_transl{ d_horizontal, -d_vertical, 0 };
+    generatrix.Translate(xyz_transl);
+
     // 3.3 Aplicando s_b
     const auto d_scale{initial_scale +
                        ((final_scale - initial_scale) / float(num_subdiv)) *
@@ -343,7 +349,7 @@ TriangleMesh* MakeTwist(Polygon& generatrix, int num_subdiv,
   /// VAZA
   if (draw_back_cap) {
       cap_normal =
-          (tmp.Center() - tmp[0]).cross(tmp.Center() - tmp[1]).versor().negate();
+          -(tmp.Center() - tmp[0]).cross(tmp.Center() - tmp[1]).versor().negate();
       cap_center = int(cap_vertices - data.vertices);
       *cap_vertices++ = tmp.Center();
       *cap_normals++ = cap_normal;
@@ -384,9 +390,11 @@ TriangleMesh* MakeTwist(Arc& generatrix, int num_subdiv,
 
     const auto d_theta{ 360.0f * num_revolutions / float(num_subdiv) };
     const auto d_length{ length_inc / float(num_subdiv) };
+    const auto d_horizontal{ horizontal_translation / float(num_subdiv) };
+    const auto d_vertical{ vertical_translation / float(num_subdiv) };
 
     // 0. Transladando geratriz p/ posi  o inicial do objeto
-    generatrix.Translate({ horizontal_translation, vertical_translation, 0 });
+    generatrix.Translate({ 0, 0, 0 });
     generatrix.AbsoluteScale(initial_scale);
 
     // 0.1. Criando tampa inicial
@@ -458,6 +466,10 @@ TriangleMesh* MakeTwist(Arc& generatrix, int num_subdiv,
         vec3f xyz{ 0, 0, d_length };
         generatrix.Translate(xyz);
 
+        // 3.2.1 Aplicando o_w_v
+        vec3f xyz_transl{ d_horizontal, -d_vertical, 0 };
+        generatrix.Translate(xyz_transl);
+
         // 3.3 Aplicando s_b
         const auto d_scale{ initial_scale +
                            ((final_scale - initial_scale) / float(num_subdiv)) *
@@ -476,7 +488,7 @@ TriangleMesh* MakeTwist(Arc& generatrix, int num_subdiv,
         vec3f direction = (tmp[tmp.Sides() - 1] - tmp[0]) * 0.5;
         *cap_vertices++ = tmp.angle() < 180 ? tmp[0] + direction : tmp.Center();
         cap_normal =
-            (tmp.Center() - tmp[0]).cross(tmp.Center() - tmp[1]).versor().negate();
+            -(tmp.Center() - tmp[0]).cross(tmp.Center() - tmp[1]).versor().negate();
         *cap_normals++ = cap_normal;
         for (int i{}, tidx{ cap_center + i }; i < tmp.Sides(); i++, tidx++) {
             *cap_vertices++ = tmp[i];
